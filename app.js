@@ -17,10 +17,11 @@ const getFebDays = (year) => {
 
 let calendar = document.querySelector('.calendar')
 
-const month_names = ['January', 'February','March', 'April', 'May', 'June', 'July',
-    'August', 'September', 'October', 'November', 'December']
+const month_names = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
 let month_picker = document.querySelector('#month-picker')
+
+let dataInput = document.querySelector('#dataInput')
 
 month_picker = document.querySelector('#month-picker')
 
@@ -43,10 +44,12 @@ const generateCalendar = (month, year) => {
 
     let first_day = new Date(year, month, 1)
 
-    for(let i = 0; i < days_of_month[month] + first_day.getDay() - 1; i++){
+    for(let i = 0; i < days_of_month[month] + first_day.getDay(); i++){
         let day = document.createElement('div')
+        let dateOfDay = [year, month, i - first_day.getDay() + 1]
         if(i >= first_day.getDay()) {
             day.classList.add('calendar-day-hover')
+            day.onclick = () => selectDay(day, dateOfDay)
             day.innerHTML = i - first_day.getDay() + 1
             day.innerHTML += `<span></span>
                             <span></span>
@@ -55,6 +58,7 @@ const generateCalendar = (month, year) => {
             if(i - first_day.getDay() + 1 === currDate.getDate() && year ===
             currDate.getFullYear() && month === currDate.getMonth()) {
                 day.classList.add('curr-date')
+                dataInput.value = currDate.toLocaleString().split(',')[0].split("/").reverse().join("-")
             }
         }
         calendar_days.appendChild(day)
@@ -82,6 +86,17 @@ document.querySelector('#prev-year').onclick = () => {
 document.querySelector('#next-year').onclick = () => {
     ++curr_year.value
     generateCalendar(curr_month.value, curr_year.value)
+}
+
+selectDay = (day, dateOfDay) => {
+    let old = document.querySelector('.curr-date')
+    if(old != null){
+        old.classList?.remove('curr-date')
+    }
+    day.classList.add('curr-date')
+    let data = new Date(dateOfDay[0], dateOfDay[1], dateOfDay[2])
+    dataInput.value = data.toISOString().split('T')[0]
+
 }
 
 let currDate = new Date()
